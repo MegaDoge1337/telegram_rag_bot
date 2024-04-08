@@ -14,13 +14,9 @@ def LLM_SUMMARIZATION_MESSAGE(ready, total):
 LLM_ANSWER_GENERATION_MESSAGE = """💭 Генерация ответа..."""
 
 
-def METRICS_SPAN(metrics):
-    return f"""💬 <code>Токенов отправлено/сгенерировано: {metrics["prompts"]}/{metrics["completions"]}</code>"""
-
-
 def TIME_SPAN(elapsed_time):
     return f"""⌛ <code>Времени прошло: {int(elapsed_time) // 60} мин. {int(elapsed_time) % 60} сек.</code>"""
 
 
-def LLM_ANSWER(metrics_span, time_span, answer_text):
-    return f"""ℹ️ {answer_text}\n\n{metrics_span}\n{time_span}"""
+def LLM_ANSWER(time_span, answer_text):
+    return f"""ℹ️ {answer_text}\n\n{time_span}"""

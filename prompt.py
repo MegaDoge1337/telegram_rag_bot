@@ -1,10 +1,9 @@
-def SUMMARY_PROMPT(text, title=None, path=None):
-    return f"""### Instruction: 
+SUMMARY_PROMPT = """<s>user 
     Статья из справки о Directum RX:
     ```статья
     ЗАГОЛОВОК: `{title}`
     ПУТЬ: `{path}`
-    КОНТЕНТ: `{text}`
+    КОНТЕНТ: `{content}`
     ```
     Сократи контент статьи, руководствуясь правилами:
     - используй только русский язык;
@@ -14,18 +13,12 @@ def SUMMARY_PROMPT(text, title=None, path=None):
     - не используй отступы и табуляцию;
     - не добавляй новой информации, используй только текст статьи;
     - не помещай свой ответ в блоки кода, такие как ```code ```;
-    - не помещай свой ответ в кавычки.
-    ### Response:"""
+    - не помещай свой ответ в кавычки.</s>"""
 
-
-def QUERY_BY_SUMMARY_PROMPT(query, summary):
-    return f"""### Instruction: Краткое содержание справки о Directum RX:
+QUERY_BY_SUMMARY_PROMPT = """<s>user
+    Краткое содержание справки о Directum RX:
     ```краткое_содержание
     {summary}
     ```
     Основываясь на кратком содержании дай ответ на вопрос: {query}
-    ### Response:"""
-
-
-def SYSTEM_PROMPT():
-    return "Ты — Сайга, русскоязычный автоматический ассистент. Ты разговариваешь с людьми и помогаешь им."
+    Ответ:</s>"""
