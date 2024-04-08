@@ -51,7 +51,7 @@ def query_by_summary(query, summary):
         temperature=0.5,
         max_tokens=500,
         top_p=0.95,
-        seed=-1
+        seed=42
     )
 
     chain = LLMChain(llm=llm, prompt=user_prompt, output_key='answer')

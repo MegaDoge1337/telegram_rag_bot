@@ -9,12 +9,12 @@ import os
 
 
 def is_exists():
-    return os.path.exists('./lc/v')
+    return os.path.exists('./langchain/vectorstore')
 
 
 def load():
     print('[vector store loader] started...')
-    folder = './lc/d'
+    folder = './langchain/documents'
     documents = os.listdir(folder)
     for document in documents:
         if '.json' not in document:
