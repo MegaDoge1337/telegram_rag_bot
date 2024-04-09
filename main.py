@@ -9,7 +9,7 @@ import vs
 
 if not vs.is_exists():
     vs.load()
-load_dotenv()
+load_dotenv(override=True)
 bot = telebot.TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
 
@@ -30,10 +30,10 @@ def get_info(message):
 
 @bot.message_handler(commands=['query'])
 def make_llm_query(message):
-    chat_id = message.chat.id
-    query = message.text.replace('/query', '')
     start_time = time.time()
 
+    chat_id = message.chat.id
+    query = message.text.replace('/query', '')
     answer_message = bot.reply_to(message, text.VS_SEARCH_MESSAGE, parse_mode='HTML')
     documents = vs.similarity_search(query)
 
@@ -75,10 +75,10 @@ def make_llm_query(message):
                             parse_mode='HTML')
 
 
-# while True:
-#     try:
-#         bot.polling(none_stop=True, interval=0)
-#     except Exception as _ex:
-#         print(_ex)
-#         time.sleep(15)
-bot.polling(none_stop=True, interval=0)
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0)
+    except Exception as _ex:
+        print(_ex)
+        time.sleep(15)
+#bot.polling(none_stop=True, interval=0)

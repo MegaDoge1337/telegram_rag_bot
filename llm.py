@@ -21,14 +21,14 @@ def summarization_documents(documents):
 
         llm = LlamaCpp(
             model_path=os.environ['MODEL_PATH'],
-            n_ctx=4096,
-            n_batch=4096,
+            n_ctx=8192,
+            n_batch=8192,
             n_gpu_layers=-1,
             n_threads=4,
-            temperature=0,
-            max_tokens=2000,
-            top_p=0.1,
-            seed=42
+            temperature=0.5,
+            max_tokens=4096,
+            top_p=0.50,
+            seed=-1
         )
 
         chain = LLMChain(llm=llm, prompt=user_prompt, output_key='summary')
@@ -44,13 +44,13 @@ def query_by_summary(query, summary):
 
     llm = LlamaCpp(
         model_path=os.environ['MODEL_PATH'],
-        n_ctx=4096,
-        n_batch=4096,
+        n_ctx=8192,
+        n_batch=8192,
         n_gpu_layers=-1,
         n_threads=4,
-        temperature=0.5,
-        max_tokens=500,
-        top_p=0.95,
+        temperature=0.9,
+        max_tokens=4096,
+        top_p=0.90,
         seed=-1
     )
 
