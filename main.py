@@ -36,30 +36,16 @@ def make_llm_query(message):
     query = message.text.replace('/query', '')
     answer_message = bot.reply_to(message, text.VS_SEARCH_MESSAGE, parse_mode='HTML')
     documents = vs.similarity_search(query)
+    context = "\n".join(list(map(lambda x: x.page_content, documents)))
 
-    summaries = []
-    ready_summaries = 1
-    total_summaries = len(documents)
-
-    for summary in llm.summarization_documents(documents):
-        bot.edit_message_text(
-            text.LLM_SUMMARIZATION_MESSAGE(ready_summaries, total_summaries),
-            chat_id,
-            answer_message.id,
-            parse_mode='HTML')
-        summaries.append(summary)
-        ready_summaries += 1
-
-    complete_summary = "\n".join(summaries)
-    complete_summary = complete_summary.replace('bot', '').rstrip().strip()
     bot.edit_message_text(
         text.LLM_ANSWER_GENERATION_MESSAGE,
         chat_id,
         answer_message.id,
         parse_mode='HTML')
 
-    answer_text = llm.query_by_summary(query, complete_summary)
-    answer_text = answer_text.replace('bot', '').rstrip().strip()
+    answer_text = llm.query_with_context(query, context)
+    answer_text = answer_text.rstrip().strip()
 
     end_time = time.time()
 
@@ -75,10 +61,10 @@ def make_llm_query(message):
                             parse_mode='HTML')
 
 
-while True:
-    try:
-        bot.polling(none_stop=True, interval=0)
-    except Exception as _ex:
-        print(_ex)
-        time.sleep(15)
-#bot.polling(none_stop=True, interval=0)
+# while True:
+#     try:
+#         bot.polling(none_stop=True, interval=0)
+#     except Exception as _ex:
+#         print(_ex)
+#         time.sleep(15)
+bot.polling(none_stop=True, interval=0)

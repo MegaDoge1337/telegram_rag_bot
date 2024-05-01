@@ -23,6 +23,7 @@ def load():
         print(f'[vector store loader] document `{folder}/{document}` is `.json` format - processing')
         data = codecs.open(f'{folder}/{document}', 'r', 'utf_8')
         data = json.load(data)
+        data = list(filter(lambda x: x['content'] != None, data))
         data = pd.DataFrame(data)
         loader = DataFrameLoader(data, page_content_column='content')
         text_splitter = CharacterTextSplitter.from_tiktoken_encoder()

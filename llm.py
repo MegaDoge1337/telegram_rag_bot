@@ -6,56 +6,27 @@ import prompt
 import os
 
 
-def summarization_documents(documents):
-    reordering = LongContextReorder()
-    reordered_documents = reordering.transform_documents(documents)
-    for document in reordered_documents:
-        document_meta_title = document.metadata['title'].split(' > ')
-        title = document_meta_title[len(document_meta_title) - 1]
-        path = "\\".join(document_meta_title)
-        content = document.page_content
-        user_prompt = PromptTemplate(
-            input_variables=['title', 'path', 'content'],
-            template=prompt.SUMMARY_PROMPT
-        )
-
-        llm = LlamaCpp(
-            model_path=os.environ['MODEL_PATH'],
-            n_ctx=8192,
-            n_batch=8192,
-            n_gpu_layers=-1,
-            n_threads=4,
-            temperature=0.5,
-            max_tokens=4096,
-            top_p=0.50,
-            seed=-1
-        )
-
-        chain = LLMChain(llm=llm, prompt=user_prompt, output_key='summary')
-        result = chain({'title': title, 'path': path, 'content': content})
-        yield result['summary']
-
-
-def query_by_summary(query, summary):
+def query_with_context(query, context):
     user_prompt = PromptTemplate(
-        input_variables=['summary', 'query'],
-        template=prompt.QUERY_BY_SUMMARY_PROMPT
+        input_variables=['query', 'context'],
+        template="""Ты полезный помощник.
+        User: Ответь на вопрос `{query}` используя краткую справку - `{context}`
+        Assistant:"""
     )
 
     llm = LlamaCpp(
         model_path=os.environ['MODEL_PATH'],
-        n_ctx=8192,
-        n_batch=8192,
-        n_gpu_layers=-1,
+        n_ctx=4096,
+        n_batch=4096,
+        n_gpu_layers=30,
         n_threads=4,
-        temperature=0.9,
-        max_tokens=4096,
-        top_p=0.90,
-        seed=-1
+        temperature=0,
+        max_tokens=1024,
+        seed=-1,
+        verbose=False
     )
 
     chain = LLMChain(llm=llm, prompt=user_prompt, output_key='answer')
-    result = chain({'summary': summary, 'query': query})
+    result = chain({'query': query, 'context': context})
 
     return result['answer']
-
